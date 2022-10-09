@@ -1,0 +1,15 @@
+.greeting {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 50px;
+}
+
+.greeting-p {
+    margin: 0;
+}
+
+.greeting-span {
+    font-size: 13px;
+    color: gray;
+    font-weight: 800;
+}

@@ -1,0 +1,24 @@
+.react-datepicker__input-container input {
+    border-radius: 10px;
+    background-color: #2154a0;
+    color: white;
+    border: none;
+    padding: 11px 16px;
+}
+
+.form2-container {
+    width: 50%;
+}
+
+.dates {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+
+/* .datePicker {
+    background-color: blue;
+} */
