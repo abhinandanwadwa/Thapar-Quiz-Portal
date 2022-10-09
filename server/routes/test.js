@@ -10,6 +10,7 @@ var jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
 const dotenv = require('dotenv');
 const request = require('request');
+const nodemailer = require("nodemailer");
 
 dotenv.config();
 
@@ -245,8 +246,36 @@ router.post('/submitquiz', fetchuser, async (req, res) => {
             hardQuestions: finalHard,
         });
 
+        // Sending Mail using nodemailer
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: "abhinandanwadhwa5@outlook.com",
+                pass: "Abhi1311"
+            }
+        });
+    
+        const admin = await UserSchema.find({ role: "admin" });
 
-        res.status(200).json(newQuiz);
+        const options = {
+            from: "abhinandanwadhwa5@outlook.com",
+            to: admin[0].email,
+            subject: 'Quiz Approval Request',
+            html: `Hello ${admin[0].name},\nYou are requested verify and approve the quiz, created by ${theUser.name} by clicking on <a href="http://localhost:3000/approve/${newQuiz.id}">this link</a>`
+        };
+    
+        transporter.sendMail(options, (err, info) => {
+            if (err) {
+                console.log(err);
+                return res.status(400).json({ error: "Internal Server Error!" });
+            }
+            console.log(info.response);
+    
+            // return res.status(200).json({ success: "Email sent successfully!!" });
+            return res.status(200).json(newQuiz);
+        })
+
+        // res.status(200).json(newQuiz);
         // for (let i = 0; i < finalEasyIndexes.length; i++) {
         //     const element = finalEasyIndexes[i];
         //     if (element === rand) {

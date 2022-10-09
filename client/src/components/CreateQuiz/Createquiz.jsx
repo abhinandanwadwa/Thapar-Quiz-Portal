@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import './createquiz.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
-import { joinPaths } from '@remix-run/router';
 
 const Createquiz = () => {
   const [quizName, setQuizName] = useState("");
@@ -26,6 +25,8 @@ const Createquiz = () => {
   const [mediumQuestionTracker, setMediumQuestionTracker] = useState([]);
   const [hardQuestionTracker, setHardQuestionTracker] = useState([]);
   const [totalMarks, setTotalMarks] = useState(0);
+
+  const form = useRef();
 
   const getNoOfQuestions = async () => {
     const authtoken = localStorage.getItem('auth-token');
