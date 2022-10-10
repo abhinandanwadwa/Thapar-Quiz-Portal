@@ -1,15 +1,51 @@
-import React, { useEffect } from 'react';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 
 const Home = () => {
+    const [data, setData] = useState([]);
+    const [testInstitute, setTestInstitute] = useState("");
+    const [isLinkAvailable, setIsLinkAvailable] = useState(false);
+    // const [startDate, setStartDate] = useState("");
+    // const [endDate, setEndDate] = useState("");
+
     const navigate = useNavigate();
+
+    const getAllAcceptedTests = async () => {
+        const authtoken = localStorage.getItem('auth-token');
+        const response = await fetch('http://localhost:8181/api/test/getallaccepted', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': authtoken
+            }
+        });
+        const json = await response.json();
+        let sno = 1;
+        json.forEach(element => {
+            let startDate = element.start;
+            let endDate = element.end;
+            element.sno = sno++;
+            element.start = moment(element.start).calendar();
+            element.end = moment(element.end).calendar();
+            if (moment(new Date()).isAfter(startDate) && moment(new Date()).isBefore(endDate)) {
+                element.link = "localhost:3000/test/test_id";
+            }
+            else {
+                element.link = "Not Available"
+            }
+        });
+        setData(json);
+        console.log(json);
+    }
 
     useEffect(() => {
         if (!localStorage.getItem('auth-token')) {
             navigate('/login');
         }
+        getAllAcceptedTests();
     }, []);
     
     const columns = [
@@ -25,12 +61,12 @@ const Home = () => {
         },
         {
             name: 'Institute',
-            selector: row => row.institute,
+            selector: row => (row.ownerInstitute).toUpperCase(),
             sortable: true,
         },
         {
             name: 'Owner',
-            selector: row => row.owner,
+            selector: row => row.ownerName,
             sortable: true,
         },
         {
@@ -46,73 +82,73 @@ const Home = () => {
         {
             name: 'Link',
             selector: row => row.link,
-            cell: () => <Link to={'/test'}>Action</Link>
         },
     ];
 
     let serialNo = 1;
-    const data = [
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "Not Available"
-        },
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "Not Available"
-        },
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "Not Available"
-        },
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "https://www.google.com"
-        },
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "Not Available"
-        },
-        {
-            id: serialNo,
-            sno: serialNo++,
-            name: "UCS009",
-            institute: "TIET",
-            owner: "PSRana",
-            start: "24th November",
-            end: "7th December",
-            link: "Not Available"
-        },
-    ]
+    
+    // data = [
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "Not Available"
+    //     },
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "Not Available"
+    //     },
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "Not Available"
+    //     },
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "https://www.google.com"
+    //     },
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "Not Available"
+    //     },
+    //     {
+    //         id: serialNo,
+    //         sno: serialNo++,
+    //         name: "UCS009",
+    //         institute: "TIET",
+    //         owner: "PSRana",
+    //         start: "24th November",
+    //         end: "7th December",
+    //         link: "Not Available"
+    //     },
+    // ]
   return (
     <>
     <Navbar />

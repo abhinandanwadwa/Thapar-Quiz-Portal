@@ -71,7 +71,15 @@ const Approvequiz = () => {
             }
         });
         const json = await response.json();
-        console.log(json);
+        if (json.success) {
+            toast.success("The Quiz has been approved successfully");
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+        }
+        else {
+            toast.error("Internal Server Error");
+        }
     }
 
     

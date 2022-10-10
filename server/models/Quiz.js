@@ -22,6 +22,10 @@ const QuizSchema = new Schema({
         type: String,
         required: true
     },
+    ownerInstitute: {
+        type: String,
+        required: true
+    },
     totalMarks: {
         type: Number,
         required: true

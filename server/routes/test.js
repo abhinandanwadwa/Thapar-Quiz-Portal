@@ -240,6 +240,7 @@ router.post('/submitquiz', fetchuser, async (req, res) => {
             end: req.body.end,
             ownerName: theUser.name,
             ownerId: req.user.id,
+            ownerInstitute: theUser.institute,
             totalMarks: req.body.totalMarks,
             easyQuestions: finalEasy,
             mediumQuestions: finalMedium,
@@ -477,6 +478,56 @@ router.put('/rejectquiz/:id', fetchuser, async (req, res) => {
     });
 
     
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTE 8: Getting all the accepted Quiz: GET: http://localhost:8181/api/test/getallaccepted/:id. Login Required
+router.get('/getallaccepted', fetchuser, async (req, res) => {
+    const allQuizes = await QuizSchema.find({ isApproved: true });
+
+    res.status(200).json(allQuizes);
 });
 
 
