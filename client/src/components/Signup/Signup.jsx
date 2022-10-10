@@ -100,7 +100,7 @@ const Signup = () => {
   return (
     <>
     <div className='container mt-5'>
-        <h2 className='mb-4 login-heading'>Login to Your Account</h2>
+        <h2 className='mb-4 login-heading'>Create A New Account</h2>
         <form>
             <div className="my-2">
                 <label className="form-label">Full Name</label>
