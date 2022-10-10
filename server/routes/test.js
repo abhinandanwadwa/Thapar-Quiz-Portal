@@ -290,4 +290,194 @@ router.post('/submitquiz', fetchuser, async (req, res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTE 5: Getting a particular quiz's details: GET: http://localhost:8181/api/test/getquiz/:id. Login Required
+router.get('/getquiz/:id', fetchuser, async (req, res) => {
+    const theUser = await UserSchema.findById(req.user.id);
+    const theQuiz = await QuizSchema.findById(req.params.id, { isApproved: false });
+
+    if (theUser.role === "student") {
+        return res.status(403).json({ error: "A student cannot review the quiz" });
+    }
+
+    res.status(200).json(theQuiz);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTE 6: Approving a particular quiz: PUT: http://localhost:8181/api/test/approvequiz/:id. Login Required
+router.put('/approvequiz/:id', fetchuser, async (req, res) => {
+    const theUser = await UserSchema.findById(req.user.id);
+    if (theUser.role !== "admin") {
+        return res.status(403).json({ error: "You cannot approve a quiz" });
+    }
+
+    const theQuiz = await QuizSchema.findByIdAndUpdate(req.params.id, { isApproved: true });
+    res.status(200).json({ success: "The Quiz has been approved" });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTE 7: Rejecting a particular quiz: PUT: http://localhost:8181/api/test/rejectquiz/:id. Login Required
+router.put('/rejectquiz/:id', fetchuser, async (req, res) => {
+    const theUser = await UserSchema.findById(req.user.id);
+    if (theUser.role !== "admin") {
+        return res.status(403).json({ error: "You cannot reject a quiz" });
+    }
+
+
+    const theQuiz = await QuizSchema.findById(req.params.id);
+    
+    const quizOwner = await UserSchema.findById(theQuiz.ownerId);
+
+
+    // Sending Mail using nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+            user: "abhinandanwadhwa5@outlook.com",
+            pass: "Abhi1311"
+        }
+    });
+
+    const options = {
+        from: "abhinandanwadhwa5@outlook.com",
+        to: quizOwner.email,
+        subject: 'Quiz Rejected',
+        html: `Hello ${theQuiz.ownerName},\nYour quiz: ${theQuiz.name} has been rejected by the admin.`
+    };
+
+    transporter.sendMail(options, (err, info) => {
+        if (err) {
+            console.log(err);
+            return res.status(400).json({ error: "Internal Server Error!" });
+        }
+        console.log(info.response);
+
+        // return res.status(200).json({ success: "Email sent successfully!!" });
+        res.status(200).json({ success: "The Quiz has been rejected" });
+    });
+
+    
+});
+
+
 module.exports = router;

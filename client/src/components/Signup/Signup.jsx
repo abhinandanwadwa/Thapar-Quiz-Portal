@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './signup.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -136,6 +136,7 @@ const Signup = () => {
             </div>
             <button onClick={register} type="submit" id='login-button' className="btn btn-primary mt-3">Login</button>
         </form>
+        <p>Already have an account? <Link to={'/login'}>Login Here</Link></p>
         <ToastContainer toastStyle={{ backgroundColor: "#202d40", color: 'white' }} />
     </div>
     </>
