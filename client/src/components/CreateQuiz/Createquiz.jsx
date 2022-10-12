@@ -117,7 +117,7 @@ const Createquiz = () => {
 
   const submitQuiz = async (e) => {
     e.preventDefault();
-    if (startDate.getDay() === endDate.getDay() && startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
+    if (startDate.getHours() === endDate.getHours() && startDate.getMinutes() === endDate.getMinutes() && startDate.getDay() === endDate.getDay() && startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
       toast.error("The start and end date of a quiz can't be same");
     }
     else {
@@ -187,12 +187,23 @@ const Createquiz = () => {
               <div className="mb-3">
                   <label className="form-label">Start Date</label>
                   {/* <input type="date" className="form-control" id="exampleInputPassword1" /> */}
-                  <DatePicker wrapperClassName="datePicker" dateFormat={"dd/MM/yyyy"} selected={startDate} onChange={(date) => setStartDate(date)} />
+                  <DatePicker
+                  wrapperClassName="datePicker"
+                  dateFormat={"dd/MM/yyyy    h:mm aa"}
+                  showTimeSelect
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  />
               </div>
               <div className="mb-3">
                   <label className="form-label">End Date</label>
                   {/* <input type="date" className="form-control" id="exampleInputPassword1" /> */}
-                  <DatePicker wrapperClassName="datePicker" dateFormat={"dd/MM/yyyy"} selected={endDate} onChange={(date) => setEndDate(date)} />
+                  <DatePicker
+                  wrapperClassName="datePicker"
+                  dateFormat={"dd/MM/yyyy    h:mm aa"}
+                  showTimeSelect
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)} />
               </div>
             </div>
             <div className="select-menu">
