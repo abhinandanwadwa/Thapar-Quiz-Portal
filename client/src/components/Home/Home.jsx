@@ -1,7 +1,8 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate, Link } from 'react-router-dom';
+import modeContext from '../../context/ModeContext';
 import Navbar from '../Navbar/Navbar';
 
 const Home = () => {
@@ -13,6 +14,10 @@ const Home = () => {
     // const [endDate, setEndDate] = useState("");
 
     const navigate = useNavigate();
+
+
+    const mode_context = useContext(modeContext);
+    const { darkMode } = mode_context;
 
     const getMyDetails = async () => {
         const authtoken = localStorage.getItem('auth-token');
@@ -64,7 +69,18 @@ const Home = () => {
 
     useEffect(() => {
         getAllAcceptedTests();
-    }, [myInstitute])
+    }, [myInstitute]);
+
+
+    useEffect(() => {
+        if (darkMode) {
+            document.body.style.backgroundColor = "black"
+        }
+        else {
+            document.body.style.backgroundColor = "white"
+        }
+    }, [darkMode])
+    
     
     
     const columns = [
@@ -72,35 +88,70 @@ const Home = () => {
             name: 'Sno',
             selector: row => row.sno,
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'Institute',
             selector: row => (row.ownerInstitute).toUpperCase(),
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'Owner',
             selector: row => row.ownerName,
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'Start Date',
             selector: row => row.start,
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'End Date',
             selector: row => row.end,
             sortable: true,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
         {
             name: 'Link',
             selector: row => row.link,
+            style: {
+                background: darkMode?"#4d4d4d":'white',
+                color: darkMode?"white":'black',
+                transition: "all 0.2s",
+            },
         },
     ];
 

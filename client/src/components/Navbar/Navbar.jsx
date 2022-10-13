@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
-import './navbar.css'
+import modeContext from '../../context/ModeContext';
+import './navbar.css';
 
 const Navbar = () => {
-    const navigate = useNavigate();
-
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
+
+    const mode_context = useContext(modeContext);
+    const { darkMode, toggleDarkMode } = mode_context;
+    
+    
+    const navigate = useNavigate();
 
     const getUserDetails = async () => {
         const authtoken = localStorage.getItem('auth-token');
@@ -24,6 +29,7 @@ const Navbar = () => {
 
     useEffect(() => {
         getUserDetails();
+        document.body.style.transition = "all 0.2s"
     }, [])
     
 
@@ -40,7 +46,7 @@ const Navbar = () => {
 
   return (
     <>
-    <nav className="navbar navbar-expand-lg bg-light">
+    <nav className={`navbar navbar-expand-lg bg-${darkMode?'dark':'light'} ${darkMode && 'navbar-dark'}`}>
         <div className="container-fluid">
             <a className="navbar-brand" href="#">Quiz Portal</a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +84,11 @@ const Navbar = () => {
                 {/* <a className="nav-link disabled">Disabled</a> */}
                 </li>
             </ul>
-                <div className='greeting'>
+            <div className="form-check form-switch">
+                <label style={{ color: darkMode && '#ffffffb3' }} className="form-check-label dark-mode-text" for="flexSwitchCheckDefault">Dark Mode</label>
+                <input onClick={toggleDarkMode} className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+            </div>
+                <div style={{ color: darkMode && 'white' }} className='greeting'>
                     <p className='greeting-p'>Hi, <strong>{name}</strong></p>
                     <span className='greeting-span'>{capitalizeFirstCh(role)}</span>
                 </div>

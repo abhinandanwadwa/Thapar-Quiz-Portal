@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import './createquiz.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
+import modeContext from '../../context/ModeContext';
 
 const Createquiz = () => {
   const [quizName, setQuizName] = useState("");
@@ -25,6 +26,9 @@ const Createquiz = () => {
   const [mediumQuestionTracker, setMediumQuestionTracker] = useState([]);
   const [hardQuestionTracker, setHardQuestionTracker] = useState([]);
   const [totalMarks, setTotalMarks] = useState(0);
+
+  const mode_context = useContext(modeContext);
+  const { darkMode } = mode_context;
 
   const form = useRef();
 

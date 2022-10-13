@@ -13,3 +13,12 @@
     color: gray;
     font-weight: 800;
 }
+
+.dark-mode-text {
+    font-weight: 900;
+    color: #00000070;
+}
+
+.navbar {
+    transition: all 0.2s;
+}
