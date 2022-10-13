@@ -21,6 +21,10 @@ const QuestionSchema = new Schema({
     marks: {
         type: Number,
         required: true
+    },
+    isApproved: {
+        type: Boolean,
+        default: false
     }
 }, {timestamps: true});
 

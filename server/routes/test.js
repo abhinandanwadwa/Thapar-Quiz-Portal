@@ -51,7 +51,8 @@ router.get("/epicshit", async (req, res) => {
             options: optionsArr,
             correctAns: correctAnsIndex,
             difficulty: difficultyArr[randomDifficultyIndex],
-            marks: marksArr[randomDifficultyIndex]
+            marks: marksArr[randomDifficultyIndex],
+            isApproved: true
         });
     };
 
@@ -95,7 +96,7 @@ router.get("/epicshit", async (req, res) => {
 // ROUTE 2: Getting no. of different level of questions from the db: GET: http://localhost:8181/api/test/noofquestions. Login Required
 router.get('/noofquestions', fetchuser, async (req, res) => {
     try {
-        const allQuestions = await QuestionSchema.find();
+        const allQuestions = await QuestionSchema.find({ isApproved: true });
         let ez = 0;
         let md = 0;
         let hd = 0;
@@ -155,7 +156,7 @@ router.get('/noofquestions', fetchuser, async (req, res) => {
 // ROUTE 3: Getting all questions from the db: GET: http://localhost:8181/api/test/getallquestions. Login Required
 router.get('/getallquestions', fetchuser, async (req, res) => {
     try {
-        const allQuestions = await QuestionSchema.find();
+        const allQuestions = await QuestionSchema.find({ isApproved: true });
         res.json(allQuestions);
 
     } catch (error) {
@@ -203,9 +204,9 @@ router.post('/submitquiz', fetchuser, async (req, res) => {
             return res.status(403).json({ error: "Students cannot submit a quiz" });
         }
 
-        let allEasyQuestionsArr = await QuestionSchema.find({ difficulty: "easy" });
-        let allMediumQuestionsArr = await QuestionSchema.find({ difficulty: "medium" });
-        let allHardQuestionsArr = await QuestionSchema.find({ difficulty: "hard" });
+        let allEasyQuestionsArr = await QuestionSchema.find({ difficulty: "easy", isApproved: true });
+        let allMediumQuestionsArr = await QuestionSchema.find({ difficulty: "medium", isApproved: true });
+        let allHardQuestionsArr = await QuestionSchema.find({ difficulty: "hard", isApproved: true });
 
         // const noOfEasy = allEasyQuestionsArr.length;
         // const noOfMedium = allMediumQuestionsArr.length;
@@ -528,6 +529,112 @@ router.get('/getallaccepted', fetchuser, async (req, res) => {
     const allQuizes = await QuizSchema.find({ isApproved: true });
 
     res.status(200).json(allQuizes);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTE 9: Create A New Question: POST: http://localhost:8181/api/test/createquestion. Login Required
+router.get('/getallaccepted', fetchuser, async (req, res) => {
+    const theUser = await UserSchema.findById(req.user.id);
+    if (theUser.role !== "teacher") {
+        return res.status(403).json({ error: "You cannot submit a new question." });
+    }
+
+    const { statement, option1, option2, option3, option4, correctAnsIndex, difficulty } = req.body;  // Destructuring the req.body object
+
+    let marks;
+    if (difficulty === "easy") {
+        marks = 1;
+    }
+    else if (difficulty === "medium") {
+        marks = 3;
+    }
+    else {  // difficulty === "hard"
+        marks = 5;
+    }
+    
+    const newQuestion = await QuestionSchema.create({
+        statement: req.body.statement,
+        options: [option1, option2, option3, option4],
+        correctAns: correctAnsIndex,
+        difficulty: difficulty,
+        marks: marks
+    });
+
+
+
+
+
+    // Sending Mail using nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+            user: "abhinandanwadhwa5@outlook.com",
+            pass: "Abhi1311"
+        }
+    });
+
+    const theAdmin = await UserSchema.findOne({ role: "admin" });
+
+    const options = {
+        from: "abhinandanwadhwa5@outlook.com",
+        to: theAdmin.email,
+        subject: 'Question Approval Request',
+        html: `Hello ${theAdmin.name},\nYou are requested verify and approve the question, created by ${theUser.name} by clicking on <a href="http://localhost:3000/approvequestion/${newQuestion.id}">this link</a>`
+    };
+
+    transporter.sendMail(options, (err, info) => {
+        if (err) {
+            console.log(err);
+            return res.status(400).json({ error: "Internal Server Error!" });
+        }
+        console.log(info.response);
+
+        // return res.status(200).json({ success: "Email sent successfully!!" });
+        res.status(200).json(newQuestion);
+    });
+
 });
 
 
